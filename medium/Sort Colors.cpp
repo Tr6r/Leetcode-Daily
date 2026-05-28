@@ -3,28 +3,28 @@ LC 75 - Sort Colors.
 Time : O(N) - traverse every items in array once.
 Space : O(1)
 
-Logic:
-1. Just apply couting sort algorihm
+Logic: Apply Dutch National Flag Algorithm (GPT recommended)
 */
 
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
-        vector<int> temp(3,0);
-        int count = 0;
+        int left = 0, mid = 0, right = nums.size() -1;
         if (nums.size() <= 1) return;
-        for(int i = 0;i<nums.size();i++)
+        while(mid<=right)
         {
-            int index = nums[i]; 
-            temp[index] ++;
-        }
-        for(int i = 0;i<3;i++)
-        {
-            for(int j= 0;j<temp[i];j++)
+            if (nums[mid] == 2)
             {
-                nums[count] = i;
-                count++;
+                swap(nums[mid], nums[right]);
+                right --;
             }
-        }   
+            if (nums[mid] == 1) mid ++;
+            else if(nums[mid] == 0)
+            {
+                swap(nums[mid], nums[left]);
+                mid ++;
+                left ++;
+            }
+        }
     }
 };
