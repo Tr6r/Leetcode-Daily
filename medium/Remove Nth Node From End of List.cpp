@@ -1,46 +1,35 @@
 /*
 LC 19 - Remove Nth Node From End of List.
-Time : O(N) - 2 time traverse every node in link list.
+Time : O(N) - 1 time traverse every node in link list.
 Space : O(1)
 
-Logic: apply counting Method
-1. Traverse all nodes in the linked list to count the total number of nodes.
-2. Find the index of the node that needs to be deleted from the beginning of the linked list.
-3. Traverse the linked list again and delete the target node.
+Logic: apply fast and slow Method
+1. Move the fast pointer n times.
+2. Move both fast and slow pointers until the fast pointer reaches NULL.
+3. Replace the next node of the slow pointer with the next next node.
 */
 
 class Solution {
 public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode* pre = NULL;
-        ListNode* nhead = head;
-        int node_del;
+        ListNode dummy;
+        dummy.next = head;
+        ListNode* fast = head;
+        ListNode* slow = &dummy;
         int count = 0;
-
-        if (head == NULL || head->next == NULL) {
-            nhead = NULL;
-            return nhead;
+        if (!head->next) {
+            return NULL;
         }
-        while (head) {
-            count++;
-            head = head->next;
-        }
-        node_del = count - n ;
-        count = 0;
-        head = nhead;
-        pre = NULL;
-        while (head) {
-            if (node_del == count) {
-                if (pre == NULL) 
-                    nhead = head->next;
-                else
-                    pre->next = head->next;
-                break;
+        while (fast) {
+            if (count < n) {
+                fast = fast->next;
+            } else {
+                slow = slow->next;
+                fast = fast->next;
             }
             count++;
-            pre = head;
-            head = head->next;
         }
-        return nhead;
+        slow->next = slow->next->next;
+        return dummy.next;
     }
 };
