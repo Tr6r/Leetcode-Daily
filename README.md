@@ -1,38 +1,17 @@
-# LeetCode Practice
+# LeetCode Daily
 
-This repository contains my solutions to problems on LeetCode, implemented primarily in C++.
+This repo is proof that I practice coding everyday.
 
-## 🎯 Goal
+Leetcode profile: [leetcode/dinhcuongtr6r](https://leetcode.com/u/dinhcuongtr6r/)
 
-* Strengthen data structures and algorithms (DSA)
+## Goal
+* Practice everyday
 * Improve problem-solving and logical thinking
-* Build a solid foundation for system and robotics development
+* Improve approach problems faster
 
-## 📂 Structure
+## Approach
 
-* `easy/`   : Basic problems
-* `medium/` : Intermediate problems
-* `hard/`   : Advanced problems
-
-## 🧠 Approach
-
-For each problem, I aim to:
-
-* Write clean and readable code
-* Optimize time and space complexity
-* Add comments explaining the approach
-
-## 🚀 Progress
-
-* Practicing consistently
-* Covering topics such as:
-
-  * Array & Hashmap
-  * Sliding Window
-  * Recursion & Backtracking
-  * Dynamic Programming (basic)
-
-
----
-
-> Focus: consistency over perfection.
+For each question, I always try to:
+* Solve it first, even if the solution is really bad
+* Second time I gonna try to optimize it
+  
