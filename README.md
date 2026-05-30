@@ -1,6 +1,6 @@
 # LeetCode Daily
 
-This repo is proof that I practice coding everyday.
+This repo is proof that I practice coding everyday
 
 Leetcode profile: [leetcode/dinhcuongtr6r](https://leetcode.com/u/dinhcuongtr6r/)
 
