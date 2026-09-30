@@ -1,7 +1,7 @@
 /*
 LC 542 - 01 Matrix
 Solution: BFS
-Time: O(N^4), Space: O(M)
+Time: O(N), Space: O(N)
 */
 
 class Solution {
@@ -16,69 +16,50 @@ public:
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
         int col = mat[0].size();
         int row = mat.size();
+        int count_1 = 0;
         queue<Pos> q;
+
+        Pos dir[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
+        vector<vector<int>> md(row, (vector<int>(col, 0)));
+
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                if (mat[i][j] == 1) {
+                if (mat[i][j] == 0) {
+                    md[i][j] = -1;
                     q.push({.x = j, .y = i});
+
+                } else {
+                    count_1 ++;
                 }
             }
         }
-        int loopCount = q.size();
-        Pos dir[4] = {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
-        for (int i = 0; i < loopCount; i++) {
-            // cout << "loopCount: " << i << endl;
-            Pos tmpP = q.front();
-            q.pop();
-            int tmpx = tmpP.x;
-            int tmpy = tmpP.y;
-            // cout << "find " << i << ": x: " << tmpx << " y: " << tmpy << endl;
-            int count = 0;
-            vector<vector<int>> md(row, (vector<int>(col, 0)));
-            queue<Pos> tmp;
-            tmp.push(tmpP);
 
-            while (!tmp.empty()) {
-                count++;
-                // cout << "count: " << count << endl;
-                int smallLoopCount = tmp.size();
-                // cout<<"smallLoopCount: "<<smallLoopCount<<endl;
-                for (int k = 0; k < smallLoopCount; k++) {
-                    Pos n = tmp.front();
-                    md[n.y][n.x] = 1;
-
-                    tmp.pop();
-                    for (int j = 0; j < 4; j++) {
-                        int dx = n.x + dir[j].x;
-                        int dy = n.y + dir[j].y;
-                        // cout << "now " << i << ": x: " << dx << " y: " << dy
-                        //      << endl;
-
-                        if (isBorder(dx, dy, col, row))
-                            continue;
-
-                        if (md[dy][dx] == 1)
-                            continue;
-                        // cout << "mat[dy][dx]" << mat[dy][dx] << endl;
-
-                        if (mat[dy][dx] != 0) {
-                            md[dy][dx] = 1;
-                            tmp.push({.x = dx, .y = dy});
-                        } else {
-                            // cout << "done" << " x: " << dx << " y: " << dy
-                            //      << endl;
-                            mat[tmpy][tmpx] = count;
-                            // cout << "____" << endl;
-                            tmp = queue<Pos>();
-                            // cout << "____" << endl;
-                            k = smallLoopCount;
-                            break;
-                        }
+        int count = 0;
+        while (!q.empty()) {
+            int loopCount = q.size();
+            count++;
+            for (int i = 0; i < loopCount; i++) {
+                Pos n = q.front();
+                q.pop();
+                for (int j = 0; j < 4; j++) {
+                    int dx = n.x + dir[j].x;
+                    int dy = n.y + dir[j].y;
+                    if (isBorder(dx, dy, col, row)) {
+                        continue;
                     }
+                    if (md[dy][dx] == -1) {
+                        continue;
+                    }
+                    if (mat[dy][dx] == 1) {
+                        mat[dy][dx] = count;
+                        count_1 --;
+                        if (count_1 == 0) return mat;
+                    }
+                    md[dy][dx] = -1;
+                    q.push({.x = dx, .y = dy});
                 }
             }
         }
-
         return mat;
     }
 };
