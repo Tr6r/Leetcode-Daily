@@ -1,12 +1,12 @@
 /*
 LC 773 - Sliding Puzzle
-Effort: 2:16:04
+Hours Effort: 2:54:38
 Solution: BFS
+Time: O(1), Space: O(1)
 */
 
 class Solution {
 public:
-
     typedef struct {
         int x;
         int y;
@@ -34,6 +34,7 @@ public:
         *value2 = *value1;
         *value1 = tmp;
     }
+
     void pr_board(const vector<vector<int>>& board) {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
@@ -42,74 +43,58 @@ public:
             cout << endl;
         }
     }
+    bool isExist(vector<vector<int>>& board, unordered_map<string, int> &hashTable) {
+        string str_maze;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                str_maze += to_string(board[i][j]);
+            }
+        }
+        int count_ex  =hashTable.count(str_maze);
+
+        if (count_ex != 0) 
+            return true;
+        
+        hashTable[str_maze] = 1;
+        return false;
+    }
     int slidingPuzzle(vector<vector<int>>& board) {
+        if (isCorrect(board)) return 0;
         int row = 2;
         int col = 3;
         int min = INT_MAX;
-        Pos pos_s;
         Pos dir[4] = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+        queue<Ctx> q;
+        unordered_map<string, int> hashTable;
+        int count = 0;
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 if (board[i][j] == 0) {
-                    pos_s.x = j;
-                    pos_s.y = i;
+                    q.push({.pos.x = j, .pos.y = i, .board = board});
                     break;
                 }
             }
         }
-        for (int i = 0; i < 4; i++) {
-            int count = 0;
-            int dx = pos_s.x + dir[i].x;
-            int dy = pos_s.y + dir[i].y;
-            if (isBorder(dx, dy, col, row))
-                continue;
-            queue<Ctx> q;
-            vector<vector<int>> board_tmp = board;
-            swap(&board_tmp[pos_s.y][pos_s.x], &board_tmp[dy][dx]);
- 
-            if (isCorrect(board_tmp))
-                return 1;
-            q.push({.pos = {.x = dx, .y = dy}, .board = board_tmp});
-            cout << "______\n";
-            // while (!q.empty()) {
-            //       Ctx n = q.front();
-            //     q.pop();
-            //     cout << "AT - y: " << n.pos.y  << " x: " << n.pos.x << "\n";
-            //     pr_board(n.board);
-            // }
-            while (!q.empty()) {
-                count++;
-                cout << "count: " << count << "\n";
-
-                int count_loop = q.size();
-                for (int j = 0; j < count_loop; j++) {
-                    Ctx n = q.front();
-                    q.pop();
-                    cout << "AT - y: " << n.pos.y  << " x: " << n.pos.x
-                             << "\n";
-                    for (int k = 0; k < 4; k++) {
-
-                        int dx2 = n.pos.x + dir[k].x;
-                        int dy2 = n.pos.y + dir[k].y;
-                        cout << "reach - dy2: " << dy2 << " dx2: " << dx2
-                             << "\n";
-
-                        if (isBorder(dx2, dy2, col, row)) {
-                            cout << "skip border" << endl;
-                            continue;
-                        }
-           
-                        swap(&n.board[n.pos.y][n.pos.x], &n.board[dy2][dx2]);
-                        if (isCorrect(n.board)) {
-                            cout<<"DONE"<<endl;
-                            if (min > count + 1) min = count + 1;
-                            q = queue<Ctx>();
-                            j = count_loop;
-                            break;
-                        }
-                        
-                        q.push({.pos = {.x = dx2, .y = dy2}, .board = n.board});
-                    }
+         
+        while (!q.empty()) {
+            int count_l = q.size();
+            
+            count++;
+            for (int j = 0; j < count_l; j++) {
+                Ctx c = q.front();
+                q.pop();
+                for (int i = 0; i < 4; i++) {
+                    int dx = c.pos.x + dir[i].x;
+                    int dy = c.pos.y + dir[i].y;
+                    if (isBorder(dx,dy,col,row))
+                        continue;
+                    vector<vector<int>> board_tmp = c.board;
+                    swap(&board_tmp[c.pos.y][c.pos.x], &board_tmp[dy][dx]);
+                    if (isExist(board_tmp,hashTable))
+                        continue;
+                    if (isCorrect(board_tmp))
+                        return count;
+                    q.push({.pos.x = dx, .pos.y = dy, .board = board_tmp});
                 }
             }
         }
