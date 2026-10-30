@@ -1,6 +1,6 @@
 /*
 LC 934 - Shortest Bridge
-Hours Effort: 01:55:46
+Hours Effort: 02:43:35
 Solution: BFS
 */
 
@@ -28,7 +28,7 @@ public:
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 if (grid[i][j] == 1) {
-                    cout << "i: " << i << " - j: " << j << endl;
+                    // cout << "i: " << i << " - j: " << j << endl;
                     q.push({j, i, 0});
                     md_grid[i][j] = 1;
                     island1 = {j, i, 0};
@@ -70,21 +70,89 @@ public:
             if (hasPosisland2)
                 break;
         }
+
+        bool nearest_pos = false;
+        int d_x = island2.x - island1.x;
+        int d_y = island2.y - island1.y;
+        cout << "d_x: " << d_x << endl;
+        cout << "d_y: " << d_y << endl;
+        cout << "old fst is: x: " << island1.x << " - y: " << island1.y << endl;
+        cout << "old sec is: x: " << island2.x << " - y: " << island2.y << endl;
+
+        if (d_y > 0) {
+            for (int i = n - 1; i >= 0; i--) {
+                cout << "check i: " << i << endl;
+                if (d_x > 0) {
+                    for (int j = n - 1; j >= 0; j--) {
+                        if (md_grid[i][j] == 1 && grid[i][j] == 1) {
+                            cout << "choose at: x: " << j << " y:" << i << endl;
+                            island1.x = j;
+                            island1.y = i;
+                            island1.count = 0;
+                            nearest_pos = true;
+                            break;
+                        }
+                    }
+                } else {
+                    for (int j = 0; j < n; j++) {
+                        if (md_grid[i][j] == 1 && grid[i][j] == 1) {
+                            cout << "choose at: x: " << j << " y:" << i << endl;
+
+                            island1.x = j;
+                            island1.y = i;
+                            island1.count = 0;
+                            nearest_pos = true;
+                            break;
+                        }
+                    }
+                }
+                if (nearest_pos)
+                    break;
+            }
+        } else {
+            for (int i = 0; i < n; i++) {
+                if (d_x > 0) {
+                    for (int j = n - 1; j >= 0; j--) {
+                        if (md_grid[i][j] == 1 && grid[i][j] == 1) {
+                            cout << "choose at: x: " << j << " y:" << i << endl;
+
+                            island1.x = j;
+                            island1.y = i;
+                            island1.count = 0;
+                            nearest_pos = true;
+                            break;
+                        }
+                    }
+                } else {
+                    for (int j = 0; j < n; j++) {
+                        if (md_grid[i][j] == 1 && grid[i][j] == 1) {
+                            cout << "choose at: x: " << j << " y:" << i << endl;
+                            island1.x = j;
+                            island1.y = i;
+                            island1.count = 0;
+                            nearest_pos = true;
+                            break;
+                        }
+                    }
+                }
+                if (nearest_pos)
+                    break;
+            }
+        }
+
         cout << "fst is: x: " << island1.x << " - y: " << island1.y << endl;
         cout << "sec is: x: " << island2.x << " - y: " << island2.y << endl;
 
-        
-        
-        
         vector<vector<int>> md_maze(n, (vector<int>(n, 0)));
         q.push(island1);
         int min_b = 100;
         md_maze[island1.y][island1.x] = 1;
         bool finish = false;
         while (!q.empty()) {
-            if (finish) return min_b;
+            if (finish)
+                return min_b;
             int count_loop = q.size();
-            cout<<"------------"<<endl;
+            cout << "------------" << endl;
             for (int j = 0; j < count_loop; j++) {
                 Pos node = q.front();
                 q.pop();
@@ -97,15 +165,16 @@ public:
                     if (md_maze[dy][dx] == 1)
                         continue;
                     if (dx == island2.x && dy == island2.y) {
-                        cout<<"aaaaaaaaaaa"<<endl;
-                        cout << "DONE at: dx: " << dx
-                             << " - dy: " << dy << endl;
-                        if (min_b > count_b) min_b = count_b;
+                        cout << "aaaaaaaaaaa" << endl;
+                        cout << "DONE at: dx: " << dx << " - dy: " << dy
+                             << endl;
+                        if (min_b > count_b)
+                            min_b = count_b;
                         finish = true;
                     }
                     if (grid[dy][dx] == 0) {
                         count_b++;
-                         cout << "count: " << count_b << " at: dx: " << dx
+                        cout << "count: " << count_b << " at: dx: " << dx
                              << " - dy: " << dy << endl;
                     }
                     // if (grid[dy][dx] == 1) {
@@ -114,8 +183,8 @@ public:
                     //     count_b = 0;
                     // }
                     md_maze[dy][dx] = 1;
-                    cout << "push at: dx: " << dx
-                             << " - dy: " << dy << endl;                    q.push({dx, dy, count_b});
+                    cout << "push at: dx: " << dx << " - dy: " << dy << endl;
+                    q.push({dx, dy, count_b});
                 }
             }
         }
