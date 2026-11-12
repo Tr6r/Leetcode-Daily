@@ -1,7 +1,7 @@
 /*
 LC 98 - Validate Binary Search Tree
-Hours Effort: 00:57:40
-Solution: DFS
+Hours Effort: 02:55:26
+Solution: inorder
 */
 
 /**
@@ -22,55 +22,33 @@ Solution: DFS
 */
 class Solution {
 public:
-    typedef struct {
-        long par_val;
-        TreeNode* node;
-        char br;
-        bool nc;
-    } ctx;
     bool isValidBST(TreeNode* root) {
-        stack<ctx> st;
-        // L , R
-        if (root->left) {
-            st.push({root->val, root->left, 'l', false});
-        }
-        if (root->right) {
-            st.push({root->val, root->right, 'r', false});
-        }
+        stack<TreeNode> st;
+        vector<int> sort;
+        st.push({*root});
         while (!st.empty()) {
-            ctx tmp = st.top();
+            TreeNode* tmp = &st.top();
             st.pop();
-            if (tmp.br == 'l') {
-                if (tmp.node->val >= tmp.par_val)
-                    return false;
-                if (tmp.node->left) {
+            if (tmp->left) {
+                TreeNode* l = tmp->left;
+                tmp->left = NULL;
+                st.push({*tmp});
 
-                    if (tmp.nc &&  tmp.node->left->val < tmp.par_val && cout<<"tmp.par_val: "<<tmp.par_val<<endl)
-                        return false;
-                    st.push({tmp.node->val, tmp.node->left, 'l',false});
-                }
-                //
-                if (tmp.node->right) {
-                    if (tmp.node->right->val > tmp.par_val && cout<<"2")
-                        return false;
-                    st.push({tmp.node->val, tmp.node->right, 'r', true});
-                }
-            } else if (tmp.br == 'r') {
-                if (tmp.node->val <= tmp.par_val)
-                    return false;
-                //
-                if (tmp.node->left) {
-                    if (tmp.node->left->val < tmp.par_val  && cout<<"3")
-                        return false;
-                    st.push({tmp.node->val, tmp.node->left, 'l', true});
-                }
-                if (tmp.node->right) {
-                    if (tmp.nc == true && tmp.node->right->val > tmp.par_val  && cout<<"4")
-                        return false;
-                    st.push({tmp.node->val, tmp.node->right, 'r', false});
-                }
+                st.push({*l});
+
+            } else if (tmp->right) {
+                sort.push_back(tmp->val);
+                TreeNode* r = tmp->right;
+                st.push({*r});
+            } else {
+                sort.push_back(tmp->val);
             }
         }
+        for (int i = 1; i < sort.size(); i++) {
+            if (sort[i-1] >= sort[i]) return false;
+        }
+
         return true;
     }
 };
+
